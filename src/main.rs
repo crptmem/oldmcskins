@@ -83,6 +83,7 @@ async fn skin(Path(username): Path<String>) -> impl IntoResponse {
 
 /// Cloak route handler
 async fn cloak(Path(username): Path<String>) -> impl IntoResponse {
+    // NOT IMPLEMENTED
     let result = reqwest::get(format!("https://mc-heads.net/download/{}", username)).await.unwrap();
     result.bytes().await.unwrap()
 }
