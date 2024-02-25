@@ -5,7 +5,7 @@ use axum::{
 use axum::extract::Path;
 use chrono::Local;
 use fern::colors::{Color, ColoredLevelConfig};
-use log::{debug, info};
+use log::info;
 use reqwest;
 
 use clap::Parser;
@@ -59,14 +59,16 @@ fn setup_logging() {
 #[tokio::main]
 async fn main() {
     setup_logging();
+    let args = Args::parse();
+    info!("Obtaining method: {:?}", args.obtaining_method);
     info!("Registering routes");
     let app = Router::new()
         .route("/", get(root))
         .route("/MinecraftCloaks/:username", get(cloak))
         .route("/MinecraftSkins/:username", get(skin));
 
-    info!("Listening on 0.0.0.0:3000");
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    info!("Listening on 0.0.0.0:{}", args.port);
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", args.port)).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
