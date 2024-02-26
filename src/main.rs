@@ -1,11 +1,8 @@
-use std::error::Error;
-
 use axum::body::Body;
 use axum::{
     response::IntoResponse, routing::get, Router
 };
 
-use axum::http::StatusCode;
 use tokio_util::io::ReaderStream;
 use axum::extract::Path;
 use chrono::Local;
@@ -115,7 +112,7 @@ async fn skin(Path(username): Path<String>) -> impl IntoResponse {
 
 /// Cloak route handler
 async fn cloak(Path(username): Path<String>) -> impl IntoResponse {
-    // NOT IMPLEMENTED
+    // Partially implemented (only CloaksLocal)
     let args = Args::parse();
     if username.contains("../") {
         return Err("forbidden username provided".to_string());
@@ -125,7 +122,7 @@ async fn cloak(Path(username): Path<String>) -> impl IntoResponse {
         info!("Sending request to {}", format!("https://mc-heads.net/download/{}", username));
         Ok(Body::from(result.bytes().await.unwrap()))
     } else {
-        let path = if username.contains(".png") { format!("assets/skins/{}", username) } else { format!("assets/skins/{}.png", username) };
+        let path = if username.contains(".png") { format!("assets/cloaks/{}", username) } else { format!("assets/cloaks/{}.png", username) };
         info!("Reading {}", path);
         let file = match tokio::fs::File::open(path).await {
             Ok(file) => file,
