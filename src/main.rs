@@ -92,7 +92,7 @@ async fn root() -> &'static str {
 async fn skin(Path(username): Path<String>) -> impl IntoResponse {
     let args = Args::parse();
     if username.contains("../") {
-        return err("forbidden username provided".to_string());
+        return Err("forbidden username provided".to_string());
     }
     if args.obtaining_method == ObtainingMethod::License || args.obtaining_method == ObtainingMethod::SkinsLicense {
         let result = reqwest::get(format!("https://mc-heads.net/download/{}", username)).await.unwrap();
